@@ -1,0 +1,7 @@
+iostat_read			value:COUNTER:U:U
+iostat_write			value:COUNTER:U:U
+iostat_kiloreads		value:COUNTER:U:U
+iostat_kilowrites		value:COUNTER:U:U
+iostat_trn_queue		value:GAUGE:0:U
+iostat_total_duration		value:COUNTER:U:U
+iostat_total_wait_in_queue	value:COUNTER:U:U
