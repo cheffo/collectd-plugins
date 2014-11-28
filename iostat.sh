@@ -18,17 +18,15 @@
 #   /usr/local/collectd-plugins/iostat-freebsd/iostat.sh
 #
 # Typical output:
-#   PUTVAL <host>/iostat-da0/iostat_tql interval=10 N:0
-#   PUTVAL <host>/iostat-da0/iostat_iops interval=10 N:19:44
-#   PUTVAL <host>/iostat-da0/iostat_iops_complex interval=10 N:63
-#   PUTVAL <host>/iostat-da0/iostat_transaction_time interval=10 N:1.1:0.3
-#   PUTVAL <host>/iostat-da0/iostat_kbps interval=10 N:610304:1926144
-#   PUTVAL <host>/iostat-da0/iostat_busy interval=10 N:2.6
-#   PUTVAL <host>/iostat-da0p1/iostat_tql interval=10 N:0
-#   PUTVAL <host>/iostat-da0p1/iostat_iops interval=10 N:0:0
-#   PUTVAL <host>/iostat-da0p1/iostat_iops_complex interval=10 N:0
-#   PUTVAL <host>/iostat-da0p1/iostat_transaction_time interval=10 N:0.0:0.0
-#   PUTVAL <host>/iostat-da0p1/iostat_kbps interval=10 N:0:0
+# Typical output:
+#   PUTVAL <host>/iostat-ada0/iostat_trns interval=10 N:188796:1038994
+#   PUTVAL <host>/iostat-ada0/iostat_kb interval=10 N:4858526:18003804
+#   PUTVAL <host>/iostat-ada0/iostat_qlen interval=10 N:0
+#   PUTVAL <host>/iostat-ada0/iostat_total interval=10 N:2785:589
+#   PUTVAL <host>/iostat-ada1/iostat_trns interval=10 N:62952:1256020
+#   PUTVAL <host>/iostat-ada1/iostat_kb interval=10 N:1448817:40299916
+#   PUTVAL <host>/iostat-ada1/iostat_qlen interval=10 N:0
+#   PUTVAL <host>/iostat-ada1/iostat_total interval=10 N:3470:626
 
 #   ...
 #
@@ -41,11 +39,12 @@ fi;
 
 while true
 do
-        `which iostat` -xdI $(if ! [ -z "$filter" ]; then echo "$filter"; fi) | sed '1,2d' | awk -v host=${COLLECTD_HOSTNAME:=`hostname -f`} -v interval=${COLLECTD_INTERVAL:-10} '{
-            print "PUTVAL " host "/iostat-" $1 "/iostat_trns" " interval=" interval  " N:" $2 ":" $3;
-            print "PUTVAL " host "/iostat-" $1 "/iostat_kb" " interval=" interval  " N:" $4 ":" $5;
-            print "PUTVAL " host "/iostat-" $1 "/iostat_qlen" " interval=" interval  " N:" $6;
-            print "PUTVAL " host "/iostat-" $1 "/iostat_total" " interval=" interval  " N:" $7 ":" $8;
+        `which iostat` -xdI $(if ! [ -z "$filter" ]; then echo "$filter"; fi) | \
+	 sed '1,2d' | awk -v host=${COLLECTD_HOSTNAME:=`hostname -f`} -v interval=${COLLECTD_INTERVAL:-10} '{
+            print "PUTVAL " host "/iostat-" $1 "/iostat_trns" " interval=" interval  " N:" int($2) ":" int($3);
+            print "PUTVAL " host "/iostat-" $1 "/iostat_kb" " interval=" interval  " N:" int($4) ":" int($5);
+            print "PUTVAL " host "/iostat-" $1 "/iostat_qlen" " interval=" interval  " N:" int($6);
+            print "PUTVAL " host "/iostat-" $1 "/iostat_total" " interval=" interval  " N:" int($7) ":" int($8);
         }'
 	sleep ${COLLECTD_INTERVAL:-10}
 done
