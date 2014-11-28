@@ -42,13 +42,10 @@ fi;
 while true
 do
         `which iostat` -xdI $(if ! [ -z "$filter" ]; then echo "$filter"; fi) | sed '1,2d' | awk -v host=${COLLECTD_HOSTNAME:=`hostname -f`} -v interval=${COLLECTD_INTERVAL:-10} '{
-            print "PUTVAL " host "/iostat-" $1 "/iostat_read" " interval=" interval  " N:" $2;
-            print "PUTVAL " host "/iostat-" $1 "/iostat_write" " interval=" interval  " N:" $3;
-            print "PUTVAL " host "/iostat-" $1 "/iostat_kiloreads" " interval=" interval  " N:" $4;
-            print "PUTVAL " host "/iostat-" $1 "/iostat_kilowrites" " interval=" interval  " N:" $5;
-            print "PUTVAL " host "/iostat-" $1 "/iostat_trn_queue" " interval=" interval  " N:" $6;
-            print "PUTVAL " host "/iostat-" $1 "/iostat_total_duration" " interval=" interval  " N:" $7;
-	    print "PUTVAL " host "/iostat-" $1 "/iostat_total_wait_in_queue" " interval=" interval  " N:" $8;
+            print "PUTVAL " host "/iostat-" $1 "/iostat_trns" " interval=" interval  " N:" $2 ":" $3;
+            print "PUTVAL " host "/iostat-" $1 "/iostat_kb" " interval=" interval  " N:" $4 ":" $5;
+            print "PUTVAL " host "/iostat-" $1 "/iostat_qlen" " interval=" interval  " N:" $6;
+            print "PUTVAL " host "/iostat-" $1 "/iostat_total" " interval=" interval  " N:" $7 ":" $8;
         }'
 	sleep ${COLLECTD_INTERVAL:-10}
 done
